@@ -1,13 +1,13 @@
 import MySQLdb
 
 host = "localhost"
-user = "aplicacao"
+user = "aplication"
 password = "123456"
-db = "escola_curso"
+db = "school"
 port = 3306
 
-connection = MySQLdb.connect(host, user, password, db, port)
-cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+con = MySQLdb.connect(host, user, password, db, port)
+c = con.cursor(MySQLdb.cursors.DictCursor)
 
 
 def select(cursor, fields, tables, where=None):
@@ -27,8 +27,19 @@ def insert(cursor, connection, values, table, fields=None):
     cursor.execute(query)
     connection.commit()
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    select('fields','table', 'id=1')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+def update(cursor, connection, sets, table, where=None):
+    query = "UPDATE {}".format(table)
+    query = "{} SET {}". format(query, ",".join([field + "= '" + value + "'" for field, value in sets.items()]))
+    if where:
+        query = "{} WHERE {}".format(query, where)
+
+    cursor.execute(query)
+    connection.commit()
+
+
+def delete(cursor, connection, table, where):
+    query = "DELETE FROM {} WHERE {}".format(table, where)
+    cursor.execute(query)
+    connection.commit()
+
